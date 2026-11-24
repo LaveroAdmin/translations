@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title'            => 'Translation Manager',
+    'description'      => 'Manage application localization strings and language files',
+    'source_language'  => 'Source Language',
+    'target_language'  => 'Target Language',
+    'group'            => 'Group / File',
+    'total_keys'       => 'Total Keys',
+    'translated'       => 'Translated',
+    'missing'          => 'Missing',
+    'key'              => 'Translation Key',
+    'source_text'      => 'Source Text',
+    'target_text'      => 'Target Translation',
+    'save_all'         => 'Save Changes',
+    'add_key'          => 'Add Key',
+    'new_key_title'    => 'Add New Translation Key',
+    'key_name'         => 'Key name (e.g. welcome_message)',
+    'default_value'    => 'Default Value',
+    'save_success'     => 'Translations saved successfully!',
+    'add_key_success'  => 'Key added successfully!',
+    'search_keys'      => 'Search keys or text...',
+    'all_groups'       => 'All Groups',
+    'empty'            => 'No translation keys found in this group.',
+];

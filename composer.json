@@ -1,0 +1,37 @@
+{
+    "name": "laveroadmin/translations",
+    "description": "Translation and localization manager for LaveroAdmin",
+    "type": "library",
+    "keywords": [
+        "lavero-admin",
+        "translations",
+        "localization",
+        "lang",
+        "i18n"
+    ],
+    "homepage": "https://bespredel.name",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandr Kireev",
+            "email": "hello@bespredel.name",
+            "homepage": "https://bespredel.name"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "laveroadmin/laveroadmin": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaveroAdmin\\Admin\\Translations\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaveroAdmin\\Admin\\Translations\\TranslationsServiceProvider"
+            ]
+        }
+    }
+}

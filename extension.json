@@ -1,0 +1,65 @@
+{
+    "name": "laveroadmin/translations",
+    "title": {
+        "en": "Translation Manager",
+        "ru": "Менеджер переводов"
+    },
+    "description": {
+        "en": "Side-by-side localization editor for PHP and JSON lang files with missing keys detection.",
+        "ru": "Двухколоночный редактор файлов локализации PHP и JSON с подсветкой отсутствующих ключей."
+    },
+    "category": "content",
+    "icon": "icon-language",
+    "version": "1.0.0",
+    "author": {
+        "name": "Aleksandr Kireev",
+        "email": "hello@bespredel.name",
+        "url": "https://bespredel.name"
+    },
+    "github": "https://github.com/LaveroAdmin/translations",
+    "setup": {
+        "commands": [
+            {
+                "cmd": "php artisan admin:import translations",
+                "desc": {
+                    "en": "Import admin menu item and permissions",
+                    "ru": "Импорт меню и прав доступа"
+                }
+            }
+        ],
+        "config": {
+            "file": "config/admin.php",
+            "code": "'translations' => [\n    'enable' => true,\n],"
+        },
+        "requirements": {
+            "en": [
+                "PHP >= 8.1",
+                "Write permissions to the project lang/ directory"
+            ],
+            "ru": [
+                "PHP >= 8.1",
+                "Права на запись в директорию lang/ проекта"
+            ]
+        },
+        "notes": {
+            "en": [
+                "Translation files are read from lang/{locale}/*.php and lang/{locale}.json.",
+                "Changes are written directly back to disk upon saving."
+            ],
+            "ru": [
+                "Файлы переводов читаются из lang/{locale}/*.php и JSON-файлов lang/{locale}.json.",
+                "При сохранении переводы автоматически синхронизируются на диске."
+            ]
+        }
+    },
+    "key": "translations",
+    "compatibility": {
+        "php": ">=8.1",
+        "laravel": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "admin": "^1.0",
+        "extensions": [
+            "json",
+            "mbstring"
+        ]
+    }
+}
