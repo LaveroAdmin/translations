@@ -61,15 +61,15 @@
                 </div>
                 <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" id="filter-untranslated">
-                    <label class="form-check-label small text-muted" for="filter-untranslated">Only untranslated</label>
+                    <label class="form-check-label small text-muted" for="filter-untranslated">{{ trans('lavero-admin-translations::translations.only_untranslated') }}</label>
                 </div>
             </div>
 
             <div class="col-sm-6 col-md-2 text-end d-flex align-items-end justify-content-end gap-1 flex-wrap">
-                <a href="{{ route('translations-export', ['source' => $sourceLocale, 'target' => $targetLocale, 'group' => $group]) }}" class="btn btn-sm btn-outline-secondary no-ajax" title="Export JSON">
+                <a href="{{ route('translations-export', ['source' => $sourceLocale, 'target' => $targetLocale, 'group' => $group]) }}" class="btn btn-sm btn-outline-secondary no-ajax" title="{{ trans('lavero-admin-translations::translations.export_json') }}">
                     <i class="icon-download"></i>
                 </a>
-                <label class="btn btn-sm btn-outline-secondary mb-0" title="Import JSON" style="cursor: pointer;">
+                <label class="btn btn-sm btn-outline-secondary mb-0" title="{{ trans('lavero-admin-translations::translations.import_json') }}" style="cursor: pointer;">
                     <i class="icon-upload"></i>
                     <input type="file" id="import-json-input" accept=".json" class="d-none">
                 </label>
@@ -224,10 +224,10 @@
                         admin.toastr.success(res.message);
                         setTimeout(() => admin.ajax.reload(), 600);
                     } else {
-                        admin.toastr.error((res && res.message) ? res.message : 'Import failed');
+                        admin.toastr.error((res && res.message) ? res.message : '{{ trans("lavero-admin-translations::translations.import_failed") }}');
                     }
                 })
-                .catch(() => admin.toastr.error('Import failed'));
+                .catch(() => admin.toastr.error('{{ trans("lavero-admin-translations::translations.import_failed") }}'));
         });
     }
 

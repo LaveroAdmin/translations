@@ -122,12 +122,12 @@ class TranslationsController
         $file = $request->file('file');
 
         if (empty($locale) || empty($group) || !$file || !$file->isValid()) {
-            return response()->json(['status' => false, 'message' => 'Invalid import file or parameters']);
+            return response()->json(['status' => false, 'message' => trans('lavero-admin-translations::translations.invalid_import_file')]);
         }
 
         $decoded = json_decode((string) file_get_contents($file->getRealPath()), true);
         if (!is_array($decoded)) {
-            return response()->json(['status' => false, 'message' => 'Invalid JSON format']);
+            return response()->json(['status' => false, 'message' => trans('lavero-admin-translations::translations.invalid_json_format')]);
         }
 
         try {
