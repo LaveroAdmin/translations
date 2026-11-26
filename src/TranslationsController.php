@@ -95,4 +95,50 @@ class TranslationsController
             ]);
         }
     }
+
+    public function export(Request $request)
+    {
+        $locale = (string) $request->get('target', 'en');
+        $source = (string) $request->get('source', 'en');
+        $group = (string) $request->get('group', '_json');
+
+        $data = $this->service->getTranslations($source, $locale, $group);
+        $export = [];
+        foreach ($data['rows'] ?? [] as $row) {
+            $export[$row['key']] = $row['target'] ?? '';
+        }
+
+        $filename = preg_replace('/[^a-zA-Z0-9_\-]/', '_', "{$locale}_{$group}") . '.json';
+
+        return response()->json($export, 200, [
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    public function import(Request $request): JsonResponse
+    {
+        $locale = (string) $request->input('locale');
+        $group = (string) $request->input('group');
+        $file = $request->file('file');
+
+        if (empty($locale) || empty($group) || !$file || !$file->isValid()) {
+            return response()->json(['status' => false, 'message' => 'Invalid import file or parameters']);
+        }
+
+        $decoded = json_decode((string) file_get_contents($file->getRealPath()), true);
+        if (!is_array($decoded)) {
+            return response()->json(['status' => false, 'message' => 'Invalid JSON format']);
+        }
+
+        try {
+            $this->service->saveTranslations($locale, $group, $decoded);
+
+            return response()->json([
+                'status'  => true,
+                'message' => trans('lavero-admin-translations::translations.save_success'),
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
 }

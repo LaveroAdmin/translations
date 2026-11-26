@@ -214,7 +214,13 @@ class TranslationService
         $export = $this->prettyPhpExport($nested);
         $content = "<?php\n\nreturn " . $export . ";\n";
 
-        return (bool)File::put($file, $content);
+        $tmpFile = tempnam($dir, 'lang_');
+        if ($tmpFile !== false && File::put($tmpFile, $content) !== false) {
+            @chmod($tmpFile, 0644);
+            return @rename($tmpFile, $file);
+        }
+
+        return (bool) File::put($file, $content);
     }
 
     /**

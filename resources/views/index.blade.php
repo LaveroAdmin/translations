@@ -59,9 +59,20 @@
                     <input type="text" id="filter-search" class="form-control" placeholder="{{ trans('lavero-admin-translations::translations.search_keys') }}">
                     <span class="input-group-text"><i class="icon-search"></i></span>
                 </div>
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="filter-untranslated">
+                    <label class="form-check-label small text-muted" for="filter-untranslated">Only untranslated</label>
+                </div>
             </div>
 
-            <div class="col-sm-6 col-md-2 text-end d-flex align-items-end justify-content-end gap-1">
+            <div class="col-sm-6 col-md-2 text-end d-flex align-items-end justify-content-end gap-1 flex-wrap">
+                <a href="{{ route('translations-export', ['source' => $sourceLocale, 'target' => $targetLocale, 'group' => $group]) }}" class="btn btn-sm btn-outline-secondary no-ajax" title="Export JSON">
+                    <i class="icon-download"></i>
+                </a>
+                <label class="btn btn-sm btn-outline-secondary mb-0" title="Import JSON" style="cursor: pointer;">
+                    <i class="icon-upload"></i>
+                    <input type="file" id="import-json-input" accept=".json" class="d-none">
+                </label>
                 <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-add-key">
                     <i class="icon-plus"></i> {{ trans('lavero-admin-translations::translations.add_key') }}
                 </button>
@@ -177,20 +188,46 @@
     const currentGroup = '{{ $group }}';
     const currentSource = '{{ $sourceLocale }}';
 
-    // Live search filter
+    // Live search & untranslated filter
     const searchInput = document.getElementById('filter-search');
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            const query = this.value.toLowerCase().trim();
-            document.querySelectorAll('.translation-row').forEach(row => {
-                const key = row.dataset.key;
-                const text = row.dataset.text;
-                if (!query || key.includes(query) || text.includes(query)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+    const untranslatedCheck = document.getElementById('filter-untranslated');
+    function applyTranslationFilters() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const onlyMissing = untranslatedCheck ? untranslatedCheck.checked : false;
+        document.querySelectorAll('.translation-row').forEach(row => {
+            const key = row.dataset.key || '';
+            const text = row.dataset.text || '';
+            const input = row.querySelector('.translation-input');
+            const isMissing = !input || input.value.trim().length === 0;
+            const matchesQuery = !query || key.includes(query) || text.includes(query);
+            const matchesMissing = !onlyMissing || isMissing;
+            row.style.display = (matchesQuery && matchesMissing) ? '' : 'none';
+        });
+    }
+    if (searchInput) searchInput.addEventListener('input', applyTranslationFilters);
+    if (untranslatedCheck) untranslatedCheck.addEventListener('change', applyTranslationFilters);
+
+    // Import JSON
+    const importInput = document.getElementById('import-json-input');
+    if (importInput) {
+        importInput.addEventListener('change', function () {
+            if (!this.files || !this.files.length) return;
+            const fd = new FormData();
+            fd.append('file', this.files[0]);
+            fd.append('locale', currentLocale);
+            fd.append('group', currentGroup);
+            fd.append('_token', '{{ csrf_token() }}');
+            fetch('{{ route("translations-import") }}', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(res => {
+                    if (res && res.status) {
+                        admin.toastr.success(res.message);
+                        setTimeout(() => admin.ajax.reload(), 600);
+                    } else {
+                        admin.toastr.error((res && res.message) ? res.message : 'Import failed');
+                    }
+                })
+                .catch(() => admin.toastr.error('Import failed'));
         });
     }
 

@@ -31,6 +31,8 @@ class Translations extends Extension
             $router->get('translations', 'LaveroAdmin\Admin\Translations\TranslationsController@index')->name('translations-index');
             $router->post('translations/save', 'LaveroAdmin\Admin\Translations\TranslationsController@save')->name('translations-save');
             $router->post('translations/add-key', 'LaveroAdmin\Admin\Translations\TranslationsController@addKey')->name('translations-add-key');
+            $router->get('translations/export', 'LaveroAdmin\Admin\Translations\TranslationsController@export')->name('translations-export');
+            $router->post('translations/import', 'LaveroAdmin\Admin\Translations\TranslationsController@import')->name('translations-import');
         });
     }
 
